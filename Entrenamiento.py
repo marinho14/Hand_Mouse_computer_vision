@@ -84,11 +84,11 @@ with mp_hands.Hands(
         min_detection_confidence=0.5,
         min_tracking_confidence=0.5) as hands:
 
-#Mientras la camara funcione se toman datos por un minuto
-    while (cap.isOpened() and (tiempo_actual.minute+1 != tiempo_futuro.minute)):
+#Mientras la camara funcione se toman datos por dos minutos
+    while (cap.isOpened() and (tiempo_actual.minute+2 != tiempo_futuro.minute)):
         # Lectura de camara
         success, image = cap.read()
-        #Actualizacion de tiempo para contar un minuto de entrenamiento
+        #Actualizacion de tiempo para contar dos minutos de entrenamiento
         tiempo_futuro = datetime.now()
 
         #Revision de correcto funcionamiento de camara
@@ -128,12 +128,18 @@ with mp_hands.Hands(
                     Y_point = int(hand_landmarks.landmark[getattr(
                         mp_hands.HandLandmark, d)].y * alto)
 
-                    #Se anade a las listas los puntos leidos
-                    X_list.append(X_point)
-                    Y_list.append(Y_point)
+                    #Lectura de punto de referencia en X y Y
+                    X_ref = int(hand_landmarks.landmark[getattr(
+                        mp_hands.HandLandmark, dedos[0])].x * ancho)
+                    Y_ref = int(hand_landmarks.landmark[getattr(
+                        mp_hands.HandLandmark, dedos[0])].y * alto)
 
-                    #Se anade al dataframe los datos leidos
-                    dataframe = dataframe.append({'X_point_0': X_list[0], 'Y_point_0': Y_list[0],
+                    #Se anade a las listas los puntos leidos
+                    X_list.append(X_point-X_ref)
+                    Y_list.append(Y_point-Y_ref)
+                    cont = 0
+                #Se anade al dataframe los datos leidos
+                dataframe = dataframe.append({'X_point_0': X_list[0], 'Y_point_0': Y_list[0],
                                                   'X_point_1': X_list[1], 'Y_point_1': Y_list[1],
                                                   'X_point_2': X_list[2], 'Y_point_2': Y_list[2],
                                                   'X_point_3': X_list[3], 'Y_point_3': Y_list[3],
@@ -153,11 +159,11 @@ with mp_hands.Hands(
                                                   'X_point_17': X_list[17], 'Y_point_17': Y_list[17],
                                                   'X_point_18': X_list[18], 'Y_point_18': Y_list[18],
                                                   'X_point_19': X_list[19], 'Y_point_19': Y_list[19],
-                                                  'X_point_20': X_list[20], 'Y_point_20': Y_list[20], 'Tipo': 0},
+                                                  'X_point_20': X_list[20], 'Y_point_20': Y_list[20], 'Tipo': 1},
                                                  ignore_index=True)
-                    cont=0
-                    X_list = []
-                    Y_list = []
+
+                X_list = []
+                Y_list = []
         cont+=1
         #Se muestra en pantalla lo captado por la camara en tiempo real
         cv2.imshow('MediaPipe Hands', image)
@@ -167,7 +173,7 @@ with mp_hands.Hands(
             break
 
 #Guardado de dataframe en csv
-dataframe.to_csv('Click_ok2.csv', header=True, index=False)
+dataframe.to_csv('Click_ok_nuevo1.csv', header=True, index=False)
 print(dataframe)
 
 #Se finaliza el captado de camara
