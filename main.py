@@ -93,8 +93,8 @@ with mp_hands.Hands(
 
 
                 ##Movimiento Mouse
-                x_8 = int(hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].x * width)
-                y_8 = int(hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].y * height)
+                x_8 = int(hand_landmarks.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_TIP].x * width)
+                y_8 = int(hand_landmarks.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_TIP].y * height)
                 cv2.circle(image,(x_8,y_8),3,(255,0,0),3)
                 x_mouse = int(x_8*ancho/width)
                 y_mouse = int(y_8*alto/height)
